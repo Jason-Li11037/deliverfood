@@ -15,8 +15,8 @@
 
 ## 命名规则
 
-- 项目名统一叫 **DeliverFood**（`deliverfood`），不要使用原课程里的项目名 OnlineOrder。
-- 仓库中所有代码、包名、文档、笔记、文件名里，**不得出现课程机构的名字**（如 laioffer）。截图里出现时，改成中性名称（示例域名用 `example.com`，包名用 `com.deliverfood`）。
+- 项目名统一叫 **DeliverFood**（`deliverfood`），不要使用原课程里的项目名。
+- 仓库中所有代码、包名、文档、笔记、文件名里，**不得出现课程机构的名字**。截图里出现时，改成中性名称（示例域名用 `example.com`，包名用 `com.deliverfood`）。
 
 ## 技术栈
 
