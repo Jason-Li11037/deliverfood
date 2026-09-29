@@ -13,11 +13,16 @@
 
 最终成果作为开源复现放在 GitHub 上（远程：`Jason-Li11037/deliverfood`）。
 
+## 命名规则
+
+- 项目名统一叫 **DeliverFood**（`deliverfood`），不要使用原课程里的项目名 OnlineOrder。
+- 仓库中所有代码、包名、文档、笔记、文件名里，**不得出现课程机构的名字**（如 laioffer）。截图里出现时，改成中性名称（示例域名用 `example.com`，包名用 `com.deliverfood`）。
+
 ## 技术栈
 
 - Java 21（Gradle toolchain）、Spring Boot 4.1.0（`spring-boot-starter-webmvc`）、Gradle Wrapper
 - 数据库为 PostgreSQL 风格 SQL（见 `src/main/resources/database-init.sql`）
-- 包名：`com.laioffer.deliverfood`，按 `controller` / `entity` / `repository` 分层
+- 包名：`com.deliverfood`，按 `controller` / `entity` / `repository` 分层
 - Jackson 配置：`SNAKE_CASE` 命名，`non_null` 序列化（见 `application.yaml`）
 
 常用命令：
@@ -69,7 +74,7 @@
 ## 目录约定
 
 ```
-src/main/java/com/laioffer/deliverfood/   # 应用代码（controller / entity / repository ...）
+src/main/java/com/deliverfood/   # 应用代码（controller / entity / repository ...）
 src/main/resources/                        # application.yaml、database-init.sql
 src/test/java/...                          # 测试
 docs/                                      # 项目演示文档（public）
