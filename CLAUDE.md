@@ -47,7 +47,7 @@
 - 用 Markdown 记录，放在 `knowledge/` 下（知识点和实现步骤都记在这里）。
 - **记录编号沿用截图中的格式**（截图里的章节/序号怎么写，文件名和标题就怎么写），不自行另起编号体系。
 - 首次遇到截图编号格式时，先向用户确认文件命名方式，确认后把约定补充到本文件。
-- **`knowledge/` 是私有内容**：本仓库是 public，`knowledge/` 已写入 `.gitignore`，**绝不能**提交到本仓库；它单独托管在一个 private 仓库里。
+- **`knowledge/` 是私有内容**：本仓库是 public，`knowledge/` 已写入 `.gitignore`，**绝不能**提交到本仓库；它是私有仓库 `Jason-Li11037/project-knowledge` 的 `deliverfood` 分支（已 clone 到本仓库的 `knowledge/` 目录）。笔记在 `knowledge/` 里单独 `git add/commit/push`，推送到该仓库的 `deliverfood` 分支；该仓库的 `main` 是各项目文件夹的合并版本，由用户同步，不要直接改。
 
 ### 3. README 同步更新
 - 项目每有进度（新增或修改代码），随时更新 `README.md` 中对应模块/代码部分的说明，和代码保持一致。
