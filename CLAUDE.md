@@ -13,11 +13,16 @@
 
 最终成果作为开源复现放在 GitHub 上（远程：`Jason-Li11037/deliverfood`）。
 
+## 命名规则
+
+- 项目名统一叫 **DeliverFood**（`deliverfood`），不要使用原课程里的项目名。
+- 仓库中所有代码、包名、文档、笔记、文件名里，**不得出现课程机构的名字**。截图里出现时，改成中性名称（示例域名用 `example.com`，包名用 `com.deliverfood`）。
+
 ## 技术栈
 
 - Java 21（Gradle toolchain）、Spring Boot 4.1.0（`spring-boot-starter-webmvc`）、Gradle Wrapper
 - 数据库为 PostgreSQL 风格 SQL（见 `src/main/resources/database-init.sql`）
-- 包名：`com.laioffer.deliverfood`，按 `controller` / `entity` / `repository` 分层
+- 包名：`com.deliverfood`，按 `controller` / `entity` / `repository` 分层
 - Jackson 配置：`SNAKE_CASE` 命名，`non_null` 序列化（见 `application.yaml`）
 
 常用命令：
@@ -42,7 +47,7 @@
 - 用 Markdown 记录，放在 `knowledge/` 下（知识点和实现步骤都记在这里）。
 - **记录编号沿用截图中的格式**（截图里的章节/序号怎么写，文件名和标题就怎么写），不自行另起编号体系。
 - 首次遇到截图编号格式时，先向用户确认文件命名方式，确认后把约定补充到本文件。
-- **`knowledge/` 是私有内容**：本仓库是 public，`knowledge/` 已写入 `.gitignore`，**绝不能**提交到本仓库；它单独托管在一个 private 仓库里。
+- **`knowledge/` 是私有内容**：本仓库是 public，`knowledge/` 已写入 `.gitignore`，**绝不能**提交到本仓库；它是私有仓库 `Jason-Li11037/project-knowledge` 的 `deliverfood` 分支（已 clone 到本仓库的 `knowledge/` 目录）。笔记在 `knowledge/` 里单独 `git add/commit/push`，推送到该仓库的 `deliverfood` 分支；该仓库的 `main` 是各项目文件夹的合并版本，由用户同步，不要直接改。
 
 ### 3. README 同步更新
 - 项目每有进度（新增或修改代码），随时更新 `README.md` 中对应模块/代码部分的说明，和代码保持一致。
@@ -69,7 +74,7 @@
 ## 目录约定
 
 ```
-src/main/java/com/laioffer/deliverfood/   # 应用代码（controller / entity / repository ...）
+src/main/java/com/deliverfood/   # 应用代码（controller / entity / repository ...）
 src/main/resources/                        # application.yaml、database-init.sql
 src/test/java/...                          # 测试
 docs/                                      # 项目演示文档（public）
