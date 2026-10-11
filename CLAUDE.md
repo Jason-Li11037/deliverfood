@@ -49,6 +49,10 @@
 - 首次遇到截图编号格式时，先向用户确认文件命名方式，确认后把约定补充到本文件。
 - **`knowledge/` 是私有内容**：本仓库是 public，`knowledge/` 已写入 `.gitignore`，**绝不能**提交到本仓库；它是私有仓库 `Jason-Li11037/project-knowledge` 的 `deliverfood` 分支（已 clone 到本仓库的 `knowledge/` 目录）。笔记在 `knowledge/` 里单独 `git add/commit/push`，推送到该仓库的 `deliverfood` 分支；该仓库的 `main` 是各项目文件夹的合并版本，由用户同步，不要直接改。
 
+### 2.5 截图里是课堂练习
+- 和项目本身无关的小练习（如 Java 基础、HTML/JS/CSS、React 基础）也**作为 commit 提交**，放在 `practice/<主题>/` 下，每个练习一个文件夹、能独立运行，体现学习过程；不要混进 `src/` 或 Gradle 构建。
+- 练习目录里同样遵守命名规则和"不加署名"规则。
+
 ### 3. README 同步更新
 - 项目每有进度（新增或修改代码），随时更新 `README.md` 中对应模块/代码部分的说明，和代码保持一致。
 - README 是 public 的，只写项目本身的说明，不引用或复制 `knowledge/` 里的笔记内容。
@@ -81,6 +85,7 @@
 src/main/java/com/deliverfood/   # 应用代码（controller / entity / repository ...）
 src/main/resources/                        # application.yaml、database-init.sql
 src/test/java/...                          # 测试
+practice/                                  # 课堂小练习（public，独立于 Gradle 构建，练习内容也要作为 commit 提交）
 docs/                                      # 项目演示文档（public）
 knowledge/                                 # 知识点与步骤笔记（private，不进本仓库，已 gitignore）
 ```
