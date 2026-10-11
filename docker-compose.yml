@@ -1,0 +1,14 @@
+services:
+
+  db:
+    image: postgres:15.2-alpine
+    environment:
+      POSTGRES_DB: deliverfood
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - deliverfood-pg-local:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  deliverfood-pg-local:
