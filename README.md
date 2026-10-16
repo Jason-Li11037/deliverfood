@@ -19,7 +19,9 @@ src/main/java/com/deliverfood/
 ├── hello/                        # first REST endpoint: HelloController and the Person/Address/Book records
 ├── controller/                   # REST controllers
 ├── entity/                       # Spring Data JDBC entities (customer, restaurant, menu item, order item, cart)
-└── repository/                   # Spring Data JDBC repositories
+├── repository/                   # Spring Data JDBC repositories
+├── model/                        # DTOs returned by the services (restaurant, menu item, cart, order item)
+└── service/                      # business logic (restaurants and menus, cart)
 src/main/resources/
 ├── application.yaml              # application configuration
 └── database-init.sql             # database schema and seed data
@@ -71,6 +73,7 @@ JSON keys are snake_case and `null` fields are omitted (see `application.yaml`).
 
 - [x] Project setup: Spring Boot application skeleton, Gradle build, YAML configuration
 - [x] First REST endpoint: `/hello` with records and a request parameter
+- [x] Service layer: DTOs and services for restaurants, menus and the cart (add item, view, clear)
 - [ ] REST API: registration, menu search, ordering, checkout
 - [x] PostgreSQL in Docker, datasource configuration, schema and seed data
 - [x] Data access with Spring Data JDBC entities and repositories
