@@ -41,7 +41,7 @@ docker compose up -d   # start PostgreSQL on localhost:5432
 docker compose down    # stop the database (data is kept in a Docker volume)
 ```
 
-On startup the application runs `database-init.sql`, which drops and recreates all tables and loads the seed data (3 restaurants and their menus). Then `DevRunner` inserts a few sample customers, carts, restaurants and order items and exercises save, delete and custom update queries. The SQL it issues is logged at DEBUG level. Because the schema is recreated on every start, this development data does not accumulate.
+On startup the application runs `database-init.sql`, which drops and recreates all tables and loads the seed data (3 restaurants and their menus). Then `DevRunner` inserts a few sample customers, carts, restaurants and menu items, exercises delete and custom update queries, and calls the services (menu lookups, adding items to a cart, clearing it). The SQL it issues is logged at DEBUG level. Because the schema is recreated on every start, this development data does not accumulate.
 
 ### Configuration
 
