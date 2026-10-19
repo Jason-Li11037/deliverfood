@@ -17,7 +17,7 @@ src/main/java/com/deliverfood/
 ├── DeliverfoodApplication.java   # Spring Boot entry point (@SpringBootApplication)
 ├── DevRunner.java                # development runner: seeds sample data and exercises the repositories on startup
 ├── hello/                        # first REST endpoint: HelloController and the Person/Address/Book records
-├── controller/                   # REST controllers
+├── controller/                   # REST controllers (menu, cart)
 ├── entity/                       # Spring Data JDBC entities (customer, restaurant, menu item, order item, cart)
 ├── repository/                   # Spring Data JDBC repositories
 ├── model/                        # DTOs returned by the services (restaurant, menu item, cart, order item)
@@ -62,19 +62,27 @@ If port 5432 is already in use on your machine, change the host side of the port
 | Method | Path | Description |
 | --- | --- | --- |
 | GET | `/hello?name=Guest` | returns a `Person` as JSON; `name` is optional and defaults to `Guest` |
+| GET | `/restaurants/menu` | all restaurants, each with its menu items |
+| GET | `/restaurant/{restaurantId}/menu` | the menu items of one restaurant |
+| GET | `/cart` | the cart with its order items and total price |
+| POST | `/cart` | add one menu item to the cart; body `{"menu_id": 1}` |
+| POST | `/cart/checkout` | check out, which empties the cart |
 
 ```bash
-curl "http://localhost:8080/hello?name=Jason"
+curl "http://localhost:8080/restaurants/menu"
+curl -X POST http://localhost:8080/cart -H "Content-Type: application/json" -d '{"menu_id": 1}'
+curl http://localhost:8080/cart
 ```
 
-JSON keys are snake_case and `null` fields are omitted (see `application.yaml`).
+JSON keys, in both responses and request bodies, are snake_case, and `null` fields are omitted (see `application.yaml`). For now the cart endpoints always act on customer 1; they will use the signed-in user once authentication is added.
 
 ## Progress
 
 - [x] Project setup: Spring Boot application skeleton, Gradle build, YAML configuration
 - [x] First REST endpoint: `/hello` with records and a request parameter
 - [x] Service layer: DTOs and services for restaurants, menus and the cart (add item, view, clear)
-- [ ] REST API: registration, menu search, ordering, checkout
+- [x] REST API: restaurant menus and the cart (fixed to customer 1 until authentication is added)
+- [ ] Registration and checkout flow for signed-in users
 - [x] PostgreSQL in Docker, datasource configuration, schema and seed data
 - [x] Data access with Spring Data JDBC entities and repositories
 - [ ] Authentication and authorization with Spring Security
