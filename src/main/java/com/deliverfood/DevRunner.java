@@ -82,20 +82,6 @@ public class DevRunner implements ApplicationRunner {
         );
         menuItemRepository.saveAll(newMenuItems);
 
-        List<OrderItemEntity> newOrderItems = List.of(
-                new OrderItemEntity(null, 1L, 1L, 1.0, 1),
-                new OrderItemEntity(null, 3L, 1L, 10.0, 1),
-                new OrderItemEntity(null, 5L, 1L, 20.0, 1),
-                new OrderItemEntity(null, 7L, 1L, 200.0, 1),
-                new OrderItemEntity(null, 9L, 1L, 30.0, 1),
-                new OrderItemEntity(null, 1L, 2L, 1.0, 1),
-                new OrderItemEntity(null, 2L, 2L, 10.0, 1),
-                new OrderItemEntity(null, 3L, 2L, 20.0, 1),
-                new OrderItemEntity(null, 4L, 2L, 200.0, 1),
-                new OrderItemEntity(null, 5L, 2L, 30.0, 1)
-        );
-        orderItemRepository.saveAll(newOrderItems);
-
         customerRepository.deleteById(2L);
         restaurantRepository.deleteById(4L);
         customerRepository.updateNameByEmail("user_a@mail.com", "first", "last");
