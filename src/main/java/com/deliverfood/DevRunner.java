@@ -1,7 +1,13 @@
 package com.deliverfood;
 
 import com.deliverfood.entity.*;
+import com.deliverfood.model.RestaurantDto;
 import com.deliverfood.repository.*;
+import com.deliverfood.service.CartService;
+import com.deliverfood.service.MenuItemService;
+import com.deliverfood.service.RestaurantService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -11,23 +17,37 @@ import java.util.List;
 @Component
 public class DevRunner implements ApplicationRunner {
 
+    // A logger for print
+    private static final Logger logger = LoggerFactory.getLogger(DevRunner.class);
+
     private final CartRepository cartRepository;
     private final CustomerRepository customerRepository;
     private final MenuItemRepository menuItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final RestaurantRepository restaurantRepository;
 
+    private final CartService cartService;
+    private final MenuItemService menuItemService;
+    private final RestaurantService restaurantService;
+
     public DevRunner(
             CartRepository cartRepository,
             CustomerRepository customerRepository,
             MenuItemRepository menuItemRepository,
             OrderItemRepository orderItemRepository,
-            RestaurantRepository restaurantRepository) {
+            RestaurantRepository restaurantRepository,
+            CartService cartService,
+            MenuItemService menuItemService,
+            RestaurantService restaurantService
+    ) {
         this.cartRepository = cartRepository;
         this.customerRepository = customerRepository;
         this.menuItemRepository = menuItemRepository;
         this.orderItemRepository = orderItemRepository;
         this.restaurantRepository = restaurantRepository;
+        this.cartService = cartService;
+        this.menuItemService = menuItemService;
+        this.restaurantService = restaurantService;
     }
 
     @Override
@@ -79,5 +99,27 @@ public class DevRunner implements ApplicationRunner {
         customerRepository.deleteById(2L);
         restaurantRepository.deleteById(4L);
         customerRepository.updateNameByEmail("user_a@mail.com", "first", "last");
+
+        // The following is new code for service
+        List<RestaurantDto> restaurantDtos = restaurantService.getRestaurants();
+        logger.info(restaurantDtos.toString());
+
+        List<MenuItemEntity> menuItemEntities = menuItemService.getMenuItemsByRestaurantId(2L);
+        logger.info(menuItemEntities.toString());
+
+        logger.info(menuItemService.getMenuItemById(1L).toString());
+
+        cartService.addMenuItemToCart(1L, 1L);
+        cartService.addMenuItemToCart(1L, 3L);
+        cartService.addMenuItemToCart(1L, 3L);
+        cartService.addMenuItemToCart(1L, 3L);
+        cartService.addMenuItemToCart(1L, 5L);
+        cartService.addMenuItemToCart(1L, 5L);
+
+        logger.info(cartService.getCart(1L).toString());
+
+        cartService.clearCart(1L);
+
+        logger.info(cartService.getCart(1L).toString());
     }
 }
