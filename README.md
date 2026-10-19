@@ -1,6 +1,6 @@
 # deliverfood
 
-A Spring and Hibernate based online food ordering system.
+A Spring Boot based online food ordering system.
 
 ## Tech stack
 
@@ -15,10 +15,11 @@ A Spring and Hibernate based online food ordering system.
 ```
 src/main/java/com/deliverfood/
 ├── DeliverfoodApplication.java   # Spring Boot entry point (@SpringBootApplication)
+├── DevRunner.java                # development runner: seeds sample data and exercises the repositories on startup
 ├── hello/                        # first REST endpoint: HelloController and the Person/Address/Book records
 ├── controller/                   # REST controllers
-├── entity/                       # domain entities (customer, cart, menu item, order item)
-└── repository/                   # data access
+├── entity/                       # Spring Data JDBC entities (customer, restaurant, menu item, order item, cart)
+└── repository/                   # Spring Data JDBC repositories
 src/main/resources/
 ├── application.yaml              # application configuration
 └── database-init.sql             # database schema and seed data
@@ -38,7 +39,7 @@ docker compose up -d   # start PostgreSQL on localhost:5432
 docker compose down    # stop the database (data is kept in a Docker volume)
 ```
 
-On startup the application runs `database-init.sql`, which drops and recreates all tables and loads the seed data (3 restaurants and their menus).
+On startup the application runs `database-init.sql`, which drops and recreates all tables and loads the seed data (3 restaurants and their menus). Then `DevRunner` inserts a few sample customers, carts, restaurants and order items and exercises save, delete and custom update queries. The SQL it issues is logged at DEBUG level. Because the schema is recreated on every start, this development data does not accumulate.
 
 ### Configuration
 
@@ -72,6 +73,6 @@ JSON keys are snake_case and `null` fields are omitted (see `application.yaml`).
 - [x] First REST endpoint: `/hello` with records and a request parameter
 - [ ] REST API: registration, menu search, ordering, checkout
 - [x] PostgreSQL in Docker, datasource configuration, schema and seed data
-- [ ] Data access with Hibernate
+- [x] Data access with Spring Data JDBC entities and repositories
 - [ ] Authentication and authorization with Spring Security
 - [ ] React + Ant Design client
