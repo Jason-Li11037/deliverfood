@@ -87,3 +87,7 @@ JSON keys, in both responses and request bodies, are snake_case, and `null` fiel
 - [x] Data access with Spring Data JDBC entities and repositories
 - [ ] Authentication and authorization with Spring Security
 - [ ] React + Ant Design client
+
+## License
+
+Released under the [MIT License](LICENSE).
