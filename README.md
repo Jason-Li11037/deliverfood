@@ -9,15 +9,17 @@ A Spring Boot based online food ordering system.
 - Gradle (Groovy DSL), YAML configuration
 - PostgreSQL 15 (runs in Docker; schema and seed data in `src/main/resources/database-init.sql`)
 - Spring Data JDBC
+- Spring Security (form login, session-based)
 
 ## Project structure
 
 ```
 src/main/java/com/deliverfood/
 ├── DeliverfoodApplication.java   # Spring Boot entry point (@SpringBootApplication)
+├── AppConfig.java                # Spring Security: filter chain, JDBC user store, password encoder
 ├── DevRunner.java                # development runner: seeds sample data and exercises the repositories on startup
 ├── hello/                        # first REST endpoint: HelloController and the Person/Address/Book records
-├── controller/                   # REST controllers (menu, cart)
+├── controller/                   # REST controllers (menu, cart, customer sign-up)
 ├── entity/                       # Spring Data JDBC entities (customer, restaurant, menu item, order item, cart)
 ├── repository/                   # Spring Data JDBC repositories
 ├── model/                        # DTOs returned by the services (restaurant, menu item, cart, order item)
@@ -59,22 +61,37 @@ If port 5432 is already in use on your machine, change the host side of the port
 
 ## API
 
-| Method | Path | Description |
-| --- | --- | --- |
-| GET | `/hello?name=Guest` | returns a `Person` as JSON; `name` is optional and defaults to `Guest` |
-| GET | `/restaurants/menu` | all restaurants, each with its menu items |
-| GET | `/restaurant/{restaurantId}/menu` | the menu items of one restaurant |
-| GET | `/cart` | the cart with its order items and total price |
-| POST | `/cart` | add one menu item to the cart; body `{"menu_id": 1}` |
-| POST | `/cart/checkout` | check out, which empties the cart |
+| Method | Path | Access | Description |
+| --- | --- | --- | --- |
+| POST | `/signup` | public | register; body `{"email", "password", "first_name", "last_name"}`, returns 201 |
+| POST | `/login` | public | form login with `username` (the email) and `password`; returns 200, or 401 on bad credentials |
+| POST | `/logout` | public | end the session; returns 200 |
+| GET | `/restaurants/menu` | public | all restaurants, each with its menu items |
+| GET | `/restaurant/{restaurantId}/menu` | public | the menu items of one restaurant |
+| GET | `/cart` | signed in | the cart with its order items and total price |
+| POST | `/cart` | signed in | add one menu item to the cart; body `{"menu_id": 1}` |
+| POST | `/cart/checkout` | signed in | check out, which empties the cart |
+| GET | `/hello?name=Guest` | signed in | returns a `Person` as JSON; `name` is optional and defaults to `Guest` |
+
+Anything that is not listed as public returns 401 until you sign in.
 
 ```bash
-curl "http://localhost:8080/restaurants/menu"
-curl -X POST http://localhost:8080/cart -H "Content-Type: application/json" -d '{"menu_id": 1}'
-curl http://localhost:8080/cart
+# register, sign in (the session cookie is kept in cookies.txt) and call a protected endpoint
+curl -X POST http://localhost:8080/signup -H "Content-Type: application/json" \
+  -d '{"email": "jane@example.com", "password": "pass1234", "first_name": "Jane", "last_name": "Doe"}'
+curl -c cookies.txt -X POST http://localhost:8080/login -d "username=jane@example.com&password=pass1234"
+curl -b cookies.txt http://localhost:8080/cart
 ```
 
-JSON keys, in both responses and request bodies, are snake_case, and `null` fields are omitted (see `application.yaml`). For now the cart endpoints always act on customer 1; they will use the signed-in user once authentication is added.
+JSON keys, in both responses and request bodies, are snake_case, and `null` fields are omitted (see `application.yaml`).
+
+Authentication uses Spring Security with form login and a server-side session. Users and their authorities are stored in the `customers` and `authorities` tables through `JdbcUserDetailsManager`, and passwords are hashed with the delegating password encoder (bcrypt by default). Sign-up lower-cases the email and creates an empty cart for the new user.
+
+Known limitations for now:
+- The cart endpoints still act on customer 1 whatever user is signed in; they will use the signed-in user in a later batch.
+- The sample customers created by `DevRunner` store a plain password without an encoder prefix, so they cannot sign in. Register a new user instead.
+- A duplicate sign-up fails inside the database and is reported as 401 rather than a clear error.
+- Credentials are sent in the clear, so use HTTPS in any real deployment.
 
 ## Progress
 
@@ -82,8 +99,13 @@ JSON keys, in both responses and request bodies, are snake_case, and `null` fiel
 - [x] First REST endpoint: `/hello` with records and a request parameter
 - [x] Service layer: DTOs and services for restaurants, menus and the cart (add item, view, clear)
 - [x] REST API: restaurant menus and the cart (fixed to customer 1 until authentication is added)
-- [ ] Registration and checkout flow for signed-in users
+- [x] Sign-up, login and logout, with route-level authorization
+- [ ] Cart bound to the signed-in user
 - [x] PostgreSQL in Docker, datasource configuration, schema and seed data
 - [x] Data access with Spring Data JDBC entities and repositories
-- [ ] Authentication and authorization with Spring Security
+- [x] Authentication and authorization with Spring Security
 - [ ] React + Ant Design client
+
+## License
+
+Released under the [MIT License](LICENSE).
