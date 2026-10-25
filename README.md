@@ -10,6 +10,8 @@ A Spring Boot based online food ordering system.
 - PostgreSQL 15 (runs in Docker; schema and seed data in `src/main/resources/database-init.sql`)
 - Spring Data JDBC
 - Spring Security (form login, session-based)
+- Spring Cache with Caffeine (in-memory)
+- JUnit 5 and Mockito for tests
 
 ## Project structure
 
@@ -68,8 +70,8 @@ If port 5432 is already in use on your machine, change the host side of the port
 | POST | `/logout` | public | end the session; returns 200 |
 | GET | `/restaurants/menu` | public | all restaurants, each with its menu items |
 | GET | `/restaurant/{restaurantId}/menu` | public | the menu items of one restaurant |
-| GET | `/cart` | signed in | the cart with its order items and total price |
-| POST | `/cart` | signed in | add one menu item to the cart; body `{"menu_id": 1}` |
+| GET | `/cart` | signed in | the signed-in user's cart with its order items and total price |
+| POST | `/cart` | signed in | add one menu item to the signed-in user's cart; body `{"menu_id": 1}` |
 | POST | `/cart/checkout` | signed in | check out, which empties the cart |
 | GET | `/hello?name=Guest` | signed in | returns a `Person` as JSON; `name` is optional and defaults to `Guest` |
 
@@ -88,10 +90,21 @@ JSON keys, in both responses and request bodies, are snake_case, and `null` fiel
 Authentication uses Spring Security with form login and a server-side session. Users and their authorities are stored in the `customers` and `authorities` tables through `JdbcUserDetailsManager`, and passwords are hashed with the delegating password encoder (bcrypt by default). Sign-up lower-cases the email and creates an empty cart for the new user.
 
 Known limitations for now:
-- The cart endpoints still act on customer 1 whatever user is signed in; they will use the signed-in user in a later batch.
 - The sample customers created by `DevRunner` store a plain password without an encoder prefix, so they cannot sign in. Register a new user instead.
 - A duplicate sign-up fails inside the database and is reported as 401 rather than a clear error.
 - Credentials are sent in the clear, so use HTTPS in any real deployment.
+
+## Caching
+
+`RestaurantService.getRestaurants()` and `CartService.getCart()` are cached in memory with Caffeine (`spring.cache.caffeine.spec: expireAfterWrite=60s`, so entries expire 60 seconds after they are written). Adding an item to the cart and checking out evict that customer's cart entry, so a cart is never stale after the user changes it. Changes made directly in the database can take up to a minute to show up in the restaurant list.
+
+## Tests
+
+```bash
+./gradlew test
+```
+
+`CartServiceTests` are unit tests that mock the repositories and do not need the database. The application context test starts the whole application, so the database must be running for the full build.
 
 ## Progress
 
@@ -100,7 +113,8 @@ Known limitations for now:
 - [x] Service layer: DTOs and services for restaurants, menus and the cart (add item, view, clear)
 - [x] REST API: restaurant menus and the cart (fixed to customer 1 until authentication is added)
 - [x] Sign-up, login and logout, with route-level authorization
-- [ ] Cart bound to the signed-in user
+- [x] Cart bound to the signed-in user
+- [x] Caching with Caffeine and unit tests for the cart service
 - [x] PostgreSQL in Docker, datasource configuration, schema and seed data
 - [x] Data access with Spring Data JDBC entities and repositories
 - [x] Authentication and authorization with Spring Security
