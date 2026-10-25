@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     runtimeOnly 'org.postgresql:postgresql:42.7.7'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
