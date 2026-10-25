@@ -111,7 +111,7 @@ Known limitations for now:
 - [x] Project setup: Spring Boot application skeleton, Gradle build, YAML configuration
 - [x] First REST endpoint: `/hello` with records and a request parameter
 - [x] Service layer: DTOs and services for restaurants, menus and the cart (add item, view, clear)
-- [x] REST API: restaurant menus and the cart (fixed to customer 1 until authentication is added)
+- [x] REST API: restaurant menus and the cart
 - [x] Sign-up, login and logout, with route-level authorization
 - [x] Cart bound to the signed-in user
 - [x] Caching with Caffeine and unit tests for the cart service
