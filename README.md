@@ -30,6 +30,7 @@ src/main/resources/
 ├── application.yaml              # application configuration
 └── database-init.sql             # database schema and seed data
 docker-compose.yml                # local PostgreSQL
+Dockerfile                        # container image of the application
 practice/
 └── java-basics/                  # small standalone Java exercises (not part of the Gradle build)
 ```
@@ -94,6 +95,40 @@ Known limitations for now:
 - A duplicate sign-up fails inside the database and is reported as 401 rather than a clear error.
 - Credentials are sent in the clear, so use HTTPS in any real deployment.
 
+## Docker image and deployment
+
+The `Dockerfile` packages the application jar on top of the Eclipse Temurin 21 JRE image, built for `linux/amd64`. The `.dockerignore` keeps everything except the built jar out of the build context.
+
+```bash
+./gradlew build
+docker buildx build --platform=linux/amd64 -t deliverfood:latest --load .
+```
+
+Run it against the database from `docker-compose.yml`, which must already be running. Inside a container `localhost` is the container itself, so point the application at the host:
+
+```bash
+docker run --rm -p 8081:8080 \
+  -e DATABASE_URL=host.docker.internal -e DATABASE_PORT=5432 -e DATABASE_PASSWORD=secret \
+  deliverfood:latest
+```
+
+The application reads its database settings from environment variables (see the configuration table), so the same image works anywhere.
+
+### Deploying to AWS (outline)
+
+The image is meant to run on AWS App Runner with Amazon RDS for PostgreSQL and Amazon ECR as the image registry. These steps have not been run for this repository; values in angle brackets are placeholders, and real account IDs, endpoints and keys must never be committed.
+
+1. Create an ECR repository and an RDS PostgreSQL instance (database name `deliverfood`).
+2. Install the AWS CLI and run `aws configure` with an IAM user that can push to ECR.
+3. Log in to the registry, tag the image and push it:
+   ```bash
+   aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <account-id>.dkr.ecr.<region>.amazonaws.com
+   docker buildx build --platform=linux/amd64 -t <account-id>.dkr.ecr.<region>.amazonaws.com/deliverfood:latest --load .
+   docker push <account-id>.dkr.ecr.<region>.amazonaws.com/deliverfood:latest
+   ```
+4. Create an App Runner service from that image on port 8080 and set the environment variables `DATABASE_URL` (the RDS endpoint), `DATABASE_PORT` and `DATABASE_PASSWORD`; also set `DATABASE_USERNAME` if the master user is not `postgres`.
+5. Set `INIT_DB=never` once the schema exists. With the default `always`, `database-init.sql` drops and recreates every table on each start, which would wipe production data.
+
 ## Caching
 
 `RestaurantService.getRestaurants()` and `CartService.getCart()` are cached in memory with Caffeine (`spring.cache.caffeine.spec: expireAfterWrite=60s`, so entries expire 60 seconds after they are written). Adding an item to the cart and checking out evict that customer's cart entry, so a cart is never stale after the user changes it. Changes made directly in the database can take up to a minute to show up in the restaurant list.
@@ -115,6 +150,7 @@ Known limitations for now:
 - [x] Sign-up, login and logout, with route-level authorization
 - [x] Cart bound to the signed-in user
 - [x] Caching with Caffeine and unit tests for the cart service
+- [x] Dockerfile and deployment notes (the AWS steps are an outline and have not been run)
 - [x] PostgreSQL in Docker, datasource configuration, schema and seed data
 - [x] Data access with Spring Data JDBC entities and repositories
 - [x] Authentication and authorization with Spring Security
