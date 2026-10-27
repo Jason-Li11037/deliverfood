@@ -1,0 +1,11 @@
+# Only the built jar is copied into the image, so keep everything else out of the build context.
+.git
+.gradle
+.idea
+.vscode
+knowledge
+practice
+src
+build/*
+!build/libs/*.jar
+*.md
