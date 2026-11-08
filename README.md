@@ -111,10 +111,13 @@ npm start      # http://localhost:3000
 | File | Purpose |
 | --- | --- |
 | `src/utils.js` | `fetch` helpers for every backend endpoint (login, sign-up, menus, cart, checkout) |
-| `src/App.js` | page layout and the signed-in state |
-| `src/components/LoginForm.js` | login form; the app shows it until a sign-in succeeds |
+| `src/App.js` | page layout and the signed-in state: signed out shows the login form and a Register button, signed in shows the restaurant list and a Cart button |
+| `src/components/LoginForm.js` | login form |
+| `src/components/SignupForm.js` | sign-up form in a modal (email, password, first and last name) |
+| `src/components/FoodList.js` | restaurant dropdown and the menu as a card grid, with an add-to-cart button on each card |
+| `src/components/MyCart.js` | drawer with the cart items, the total price and a Checkout button |
 
-So far the client has the layout and the login form; a successful sign-in shows a placeholder where the restaurant list and the cart will go.
+The flow: register, log in, pick a restaurant, add dishes, open the cart and check out. The cart is reloaded from the backend each time the drawer opens.
 
 Create React App is no longer maintained, but it is what the course material uses. React is pinned to version 18 because Ant Design 4 does not support React 19. The login helper sends the credentials in the query string, as the backend's form login accepts, so the client must only be used over HTTPS outside local development.
 
@@ -178,7 +181,7 @@ The image is meant to run on AWS App Runner with Amazon RDS for PostgreSQL and A
 - [x] Data access with Spring Data JDBC entities and repositories
 - [x] Authentication and authorization with Spring Security
 - [x] React client: project setup, API helpers, layout and login form
-- [ ] React client: sign-up, restaurant list and the cart
+- [x] React client: sign-up, restaurant list and the cart
 
 ## License
 
