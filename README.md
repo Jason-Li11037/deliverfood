@@ -12,6 +12,7 @@ A Spring Boot based online food ordering system.
 - Spring Security (form login, session-based)
 - Spring Cache with Caffeine (in-memory)
 - JUnit 5 and Mockito for tests
+- React 18 and Ant Design 4 for the client (Create React App, Node.js 20 or later)
 
 ## Project structure
 
@@ -30,6 +31,7 @@ src/main/resources/
 ├── application.yaml              # application configuration
 └── database-init.sql             # database schema and seed data
 docker-compose.yml                # local PostgreSQL
+frontend/                         # React client (Create React App)
 Dockerfile                        # container image of the application
 practice/
 └── java-basics/                  # small standalone Java exercises (not part of the Gradle build)
@@ -95,6 +97,27 @@ Known limitations for now:
 - A duplicate sign-up fails inside the database and is reported as 401 rather than a clear error.
 - Credentials are sent in the clear, so use HTTPS in any real deployment.
 
+## Frontend
+
+The React client lives in `frontend/`. In development it runs on port 3000 and forwards API calls to the backend on port 8080 through the `proxy` setting in `frontend/package.json`, so the browser only talks to one origin and the session cookie works.
+
+```bash
+# the backend and the database must be running first
+cd frontend
+npm install
+npm start      # http://localhost:3000
+```
+
+| File | Purpose |
+| --- | --- |
+| `src/utils.js` | `fetch` helpers for every backend endpoint (login, sign-up, menus, cart, checkout) |
+| `src/App.js` | page layout and the signed-in state |
+| `src/components/LoginForm.js` | login form; the app shows it until a sign-in succeeds |
+
+So far the client has the layout and the login form; a successful sign-in shows a placeholder where the restaurant list and the cart will go.
+
+Create React App is no longer maintained, but it is what the course material uses. React is pinned to version 18 because Ant Design 4 does not support React 19. The login helper sends the credentials in the query string, as the backend's form login accepts, so the client must only be used over HTTPS outside local development.
+
 ## Docker image and deployment
 
 The `Dockerfile` packages the application jar on top of the Eclipse Temurin 21 JRE image, built for `linux/amd64`. The `.dockerignore` keeps everything except the built jar out of the build context.
@@ -154,7 +177,8 @@ The image is meant to run on AWS App Runner with Amazon RDS for PostgreSQL and A
 - [x] PostgreSQL in Docker, datasource configuration, schema and seed data
 - [x] Data access with Spring Data JDBC entities and repositories
 - [x] Authentication and authorization with Spring Security
-- [ ] React + Ant Design client
+- [x] React client: project setup, API helpers, layout and login form
+- [ ] React client: sign-up, restaurant list and the cart
 
 ## License
 
