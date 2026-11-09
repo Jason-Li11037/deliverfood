@@ -37,6 +37,10 @@ practice/
 └── java-basics/                  # small standalone Java exercises (not part of the Gradle build)
 ```
 
+## Demo
+
+[docs/demo.md](docs/demo.md) is a short guide to the app: the architecture and data model, a step-by-step walkthrough of the user flow, the same flow with `curl`, and the known limitations.
+
 ## Getting started
 
 Requirements: JDK 21 and Docker.
@@ -119,6 +123,17 @@ npm start      # http://localhost:3000
 
 The flow: register, log in, pick a restaurant, add dishes, open the cart and check out. The cart is reloaded from the backend each time the drawer opens.
 
+### Production build
+
+`npm run build` writes the optimized client to `frontend/build/`, which is git-ignored. The back end can serve that folder itself, so the whole application runs on one port with no dev server and no proxy:
+
+```bash
+cd frontend && npm run build && cd ..
+./gradlew bootRun --args="--spring.web.resources.static-locations=file:frontend/build/"   # http://localhost:8080
+```
+
+The security configuration already allows anonymous `GET` requests for `/`, `/index.html`, `/static/**` and the manifest and icon files. The signed-in state lives in React state, so reloading the page returns to the login form even though the session cookie is still valid.
+
 Create React App is no longer maintained, but it is what the course material uses. React is pinned to version 18 because Ant Design 4 does not support React 19. The login helper sends the credentials in the query string, as the backend's form login accepts, so the client must only be used over HTTPS outside local development.
 
 ## Docker image and deployment
@@ -182,6 +197,7 @@ The image is meant to run on AWS App Runner with Amazon RDS for PostgreSQL and A
 - [x] Authentication and authorization with Spring Security
 - [x] React client: project setup, API helpers, layout and login form
 - [x] React client: sign-up, restaurant list and the cart
+- [x] Production build of the client served by the back end, and the demo guide
 
 ## License
 
