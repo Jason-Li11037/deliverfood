@@ -37,6 +37,10 @@ practice/
 └── java-basics/                  # small standalone Java exercises (not part of the Gradle build)
 ```
 
+## Demo
+
+[docs/demo.md](docs/demo.md) is a short guide to the app: the architecture and data model, a step-by-step walkthrough of the user flow, the same flow with `curl`, and the known limitations.
+
 ## Getting started
 
 Requirements: JDK 21 and Docker.
@@ -193,6 +197,7 @@ The image is meant to run on AWS App Runner with Amazon RDS for PostgreSQL and A
 - [x] Authentication and authorization with Spring Security
 - [x] React client: project setup, API helpers, layout and login form
 - [x] React client: sign-up, restaurant list and the cart
+- [x] Production build of the client served by the back end, and the demo guide
 
 ## License
 
